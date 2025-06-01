@@ -1,9 +1,13 @@
-import "./App.css";
+import "./App.scss";
+import logo from "./assets/react.svg";
+import Form from "./components/Form";
 
 function App() {
   return (
     <div className="App">
-      <h1>hello</h1>
+      <img src={logo} alt="logo" className="logo" />
+      <h1>Sign Up</h1>
+      <Form />
     </div>
   );
 }
