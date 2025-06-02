@@ -7,10 +7,11 @@ export default function Input({
   id,
   label,
   listName,
-  value,
+  val,
   onSetValue,
+  reference
 }) {
-  const [roles, setValue] = useState(roleList);
+  const [roles, setRoles] = useState(roleList);
 
   return (
     <div className="data">
@@ -23,8 +24,9 @@ export default function Input({
         id={id}
         className="data__input"
         list={listName}
-        value={value}
+        value={val}
         onChange={onSetValue}
+        ref={type==="file" ? reference:null}
       />
       {listName === "rolesList" && <RoleList />}
     </div>

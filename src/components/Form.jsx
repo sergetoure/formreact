@@ -1,6 +1,6 @@
 import Submit from "./Submit";
 import Input from "./Input";
-import { useState } from "react";
+import { useState,useRef } from "react";
 const initialState = [
   {
     labelStyle: "data__label  required",
@@ -54,23 +54,42 @@ const initialState = [
 ];
 export default function Form() {
   const [state, setState] = useState(initialState);
+  const fileRef = useRef(null);
   const handleChange = (e) => {
-    if (e.target.id === "firstname") {
-      setState(
-        [...state,
-        
-          ...[...state.filter((item) => item.id == "firstname")][0],
-          value: e.target.value,
-              );
-    }
+  
+   //update state with the new value
+      setState((prevState) =>
+        prevState.map((item) =>
+          item.id === e.target.id && e.target.type!="file" ? { ...item, value: e.target.value } : item
+        )
+      );
+
+   
+       
+ 
     console.log(state);
   };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle file upload if needed
+    const files = Object.entries(fileRef.current.files);
+    if (files.length > 0) {
+     
+
+      files.forEach(([key, file]) => {
+        console.log(`File ${key}:`, file.name);
+      });
+    }
+    // Log the current state
+    console.log("Form submitted with state:");
+    console.log(state);
+  }
   return (
     <>
-      <form>
+      <form className="form" onSubmit={handleSubmit}> 
         {state.map((item) => {
           const { labelStyle, id, label, type, listName, value } = item;
-          return (
+          return type === "file" ? (
             <Input
               key={id}
               labelStyle={labelStyle}
@@ -78,7 +97,18 @@ export default function Form() {
               id={id}
               label={label}
               listName={listName}
-              value={value}
+              reference={fileRef}
+             
+            />
+          ) : (
+            <Input
+              key={id}
+              labelStyle={labelStyle}
+              type={type}
+              id={id}
+              label={label}
+              listName={listName}
+              val={value}
               onSetValue={handleChange}
             />
           );
