@@ -2,20 +2,23 @@ import { useState } from "react";
 import RoleList from "./RoleList";
 const roleList = ["user", "supervisor", "manager", "director", "partner"];
 export default function Input({
-  labelStyle,
   type,
   id,
   label,
   listName,
   val,
   onSetValue,
-  reference
+  reference,
+  required,
+  minLength,
+  errorMsg,
 }) {
-  const [roles, setRoles] = useState(roleList);
-
   return (
     <div className="data">
-      <label htmlFor={id} className={labelStyle}>
+      <label
+        htmlFor={id}
+        className={required ? "data__label required" : "data__label"}
+      >
         {label}
       </label>
       <input
@@ -26,8 +29,11 @@ export default function Input({
         list={listName}
         value={val}
         onChange={onSetValue}
-        ref={type==="file" ? reference:null}
+        ref={type === "file" ? reference : null}
+        required={required}
+        minLength={minLength}
       />
+      <p className="error">{errorMsg}</p>
       {listName === "rolesList" && <RoleList />}
     </div>
   );
