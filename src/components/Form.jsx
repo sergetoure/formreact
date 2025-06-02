@@ -57,12 +57,11 @@ export default function Form() {
   const handleChange = (e) => {
     if (e.target.id === "firstname") {
       setState(
-        { ...state },
-        {
+        [...state,
+        
           ...[...state.filter((item) => item.id == "firstname")][0],
           value: e.target.value,
-        }
-      );
+              );
     }
     console.log(state);
   };
