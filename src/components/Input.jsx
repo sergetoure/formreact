@@ -1,7 +1,15 @@
 import { useState } from "react";
 import RoleList from "./RoleList";
 const roleList = ["user", "supervisor", "manager", "director", "partner"];
-export default function Input({ labelStyle, type, id, label, listName }) {
+export default function Input({
+  labelStyle,
+  type,
+  id,
+  label,
+  listName,
+  value,
+  onSetValue,
+}) {
   const [roles, setValue] = useState(roleList);
 
   return (
@@ -15,6 +23,8 @@ export default function Input({ labelStyle, type, id, label, listName }) {
         id={id}
         className="data__input"
         list={listName}
+        value={value}
+        onChange={onSetValue}
       />
       {listName === "rolesList" && <RoleList />}
     </div>
