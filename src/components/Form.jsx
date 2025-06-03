@@ -104,6 +104,26 @@ export default function Form() {
             isValid: validity.valid,
             errorMsg: validity.valid ? "" : e.target.validationMessage,
           };
+          //manage confirm password validation
+        } else if (input.id === "passwordconfirm") {
+          // Check if confirm password matches password
+          const passwordInput = prevState.inputState.find(
+            (input) => input.id === "password"
+          );
+          if (value !== passwordInput.value) {
+            return {
+              ...input,
+              value,
+              isValid: false,
+              errorMsg: "Passwords do not match",
+            };
+          }
+          return {
+            ...input,
+            value,
+            isValid: true,
+            errorMsg: "",
+          };
         }
         return input;
       });
