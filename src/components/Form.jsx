@@ -78,50 +78,48 @@ export default function Form() {
   const handleBlur = (e) => {
     const id = e.target.id;
     const value = e.target.value;
-    const validity = e.target.validity; // Add this line to get HTML5 validation state
+    const validity = e.target.validity;
 
     const inputToValidate = state.inputState.find((input) => input.id === id);
     if (!inputToValidate) return false;
 
-    // Check HTML5 validity first
-    if (!validity.valid) {
-      console.log(state, validity.valid);
-      setState((prevState) => ({
-        ...prevState,
-        inputState: prevState.inputState.map((i) =>
-          i.id === inputToValidate.id
-            ? { ...i, errorMsg: e.target.validationMessage, isValid: false }
-            : i
-        ),
-      }));
-      return false;
-    } else {
-      // If valid, update the input state
-      setState((prevState) => ({
-        ...prevState,
-        inputState: prevState.inputState.map((i) =>
-          i.id === inputToValidate.id
-            ? { ...i, errorMsg: "", isValid: true }
-            : i
-        ),
-      }));
-    }
+    // Create a new state update
+    setState((prevState) => {
+      // First update the current input
+      const updatedInputState = prevState.inputState.map((input) => {
+        if (input.id === id) {
+          // Check if field is empty and required
+          if (input.required && !value) {
+            return {
+              ...input,
+              value,
+              isValid: false,
+              errorMsg: "This field is required",
+            };
+          }
+          // Check other validations if field has value
+          return {
+            ...input,
+            value,
+            isValid: validity.valid,
+            errorMsg: validity.valid ? "" : e.target.validationMessage,
+          };
+        }
+        return input;
+      });
 
-    //check form overall validity
-    const isFormValid = state.inputState.every((input) => input.isValid);
-    //update form isValid state
-    setState((prevState) => ({
-      ...prevState,
-      isValid: isFormValid,
-    }));
+      // Then check overall form validity
+      const isFormValid = updatedInputState.every((input) =>
+        input.required ? input.isValid : true
+      );
 
-    // ensure that after the last input is validated, the form's isValid state is updated
-    if (id === "roles") {
-      setState((prevState) => ({
+      // Return updated state
+      return {
         ...prevState,
-        isValid: prevState.inputState.every((input) => input.isValid),
-      }));
-    }
+        inputState: updatedInputState,
+        isValid: isFormValid,
+      };
+    });
   };
   const handleChange = (e) => {
     //update state with the new value
