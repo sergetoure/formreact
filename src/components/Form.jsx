@@ -1,23 +1,25 @@
 import Submit from "./Submit";
 import Input from "./Input";
-import { useState, useRef, isValidElement } from "react";
+import { useState, useRef } from "react";
 const initialState = {
   inputState: [
     {
       id: "firstname",
       label: "First name",
       type: "text",
-      value: undefined,
+      value: "",
       required: true,
       errorMsg: "",
+      isValid: false,
     },
     {
       id: "lastname",
       label: "Last name",
       type: "text",
       value: "",
-      required: false,
+      required: true,
       errorMsg: "",
+      isValid: false,
     },
     {
       id: "email",
@@ -26,6 +28,7 @@ const initialState = {
       value: "",
       required: true,
       errorMsg: "",
+      isValid: false,
     },
     {
       id: "password",
@@ -35,6 +38,7 @@ const initialState = {
       required: true,
       minLength: 8,
       errorMsg: "",
+      isValid: false,
     },
     {
       id: "passwordconfirm",
@@ -43,6 +47,7 @@ const initialState = {
       value: "",
       required: true,
       errorMsg: "",
+      isValid: false,
     },
     {
       id: "roles",
@@ -50,8 +55,9 @@ const initialState = {
       type: "text",
       listName: "rolesList",
       value: "",
-      required: true,
+      required: false,
       errorMsg: "",
+      isValid: true,
     },
     {
       id: "files",
@@ -59,6 +65,7 @@ const initialState = {
       type: "file",
       required: false,
       errorMsg: "",
+      isValid: true,
     },
   ],
   isValid: false,
@@ -74,58 +81,101 @@ export default function Form() {
     return re.test(String(email).toLowerCase());
   };
 
-  const getIsFormValid = () => {
+  const handleBlur = (e) => {
+    const id = e.target.id;
     //The first name cannot be empty.
     // The email must be a valid email address and can't be empty. A function called validateEmail has already been provided for you to check if the email is valid. It returns true if the email is valid, otherwise  false is returned.
     // The password must be at least 8 characters long.
     // The role must be either individual or business.
     //set the isValid property to true if all the above conditions are met, otherwise set it to false.
 
-    const isValid = state.inputState.every((item) => {
-      if (item.required && !item.value) {
+    const inputToValidate = state.inputState.find((input) => input.id === id);
+    if (!inputToValidate) return false;
+
+    if (inputToValidate.required && !inputToValidate.value) {
+      setState((prevState) => ({
+        ...prevState,
+        inputState: prevState.inputState.map((i) =>
+          i.id === inputToValidate.id
+            ? { ...i, errorMsg: `${i.label} is required`, isValid: false }
+            : i
+        ),
+      }));
+      return false;
+    }
+
+    if (
+      inputToValidate.type === "email" &&
+      inputToValidate.value &&
+      !validateEmail(inputToValidate.value)
+    ) {
+      setState((prevState) => ({
+        ...prevState,
+        inputState: prevState.inputState.map((i) =>
+          i.id === inputToValidate.id
+            ? { ...i, errorMsg: "Invalid email address", isValid: false }
+            : i
+        ),
+      }));
+      return false;
+    }
+
+    if (
+      inputToValidate.type === "password" &&
+      inputToValidate.minLength &&
+      inputToValidate.value.length < inputToValidate.minLength
+    ) {
+      setState((prevState) => ({
+        ...prevState,
+        inputState: prevState.inputState.map((i) =>
+          i.id === inputToValidate.id
+            ? {
+                ...i,
+                errorMsg: `${i.label} must be at least ${i.minLength} characters long`,
+                isValid: false,
+              }
+            : i
+        ),
+      }));
+      return false;
+    }
+
+    // Password confirmation validation
+    if (inputToValidate.id === "passwordconfirm") {
+      const passwordInput = state.inputState.find(
+        (input) => input.id === "password"
+      );
+      if (passwordInput && inputToValidate.value !== passwordInput.value) {
         setState((prevState) => ({
           ...prevState,
           inputState: prevState.inputState.map((i) =>
-            i.id === item.id ? { ...i, errorMsg: `${i.label} is required` } : i
-          ),
-        }));
-        return false;
-      }
-      if (item.type === "email" && item.value && !validateEmail(item.value)) {
-        setState((prevState) => ({
-          ...prevState,
-          inputState: prevState.inputState.map((i) =>
-            i.id === item.id ? { ...i, errorMsg: "Invalid email address" } : i
-          ),
-        }));
-        return false;
-      }
-      if (
-        item.type === "password" &&
-        item.minLength &&
-        item.value.length < item.minLength
-      ) {
-        setState((prevState) => ({
-          ...prevState,
-          inputState: prevState.inputState.map((i) =>
-            i.id === item.id
-              ? {
-                  ...i,
-                  errorMsg: `${i.label} must be at least ${i.minLength} characters long`,
-                }
+            i.id === inputToValidate.id
+              ? { ...i, errorMsg: "Passwords do not match", isValid: false }
               : i
           ),
         }));
         return false;
       }
-      item.errorMsg = ""; // Clear error message if validation passes
-      return true;
-    });
+    }
 
+    // If all validations pass, clear error and set isValid
     setState((prevState) => ({
       ...prevState,
-      isValid,
+      inputState: prevState.inputState.map((i) =>
+        i.id === inputToValidate.id ? { ...i, errorMsg: "", isValid: true } : i
+      ),
     }));
+    console.log(state);
+
+    // Check if the entire form is valid
+    const isValid = state.inputState.every((item) =>
+      item.required ? item.isValid : true
+    );
+    setState((prevState) => ({
+      ...prevState,
+      isValid: isValid ? true : false,
+    }));
+    return true;
   };
   const handleChange = (e) => {
     //update state with the new value
@@ -145,23 +195,29 @@ export default function Form() {
     // and the state has been updated
     // This is to ensure that the validation reflects the latest input values
 
-    getIsFormValid();
-
-    console.log(state);
+    //console.log(state);
+    //handleBlur(e);
   };
   const handleSubmit = (e) => {
     e.preventDefault();
 
     // Handle file upload if needed
+    //add new promise
+    //set time out to simulate file upload
+    // This is just a placeholder for actual file upload logic
+
     const files = Object.entries(fileRef.current.files);
     if (files.length > 0) {
       files.forEach(([key, file]) => {
         console.log(`File ${key}:`, file.name);
       });
     }
+
     // Log the current state
     console.log("Form submitted with state:");
     console.log(state);
+    // Reset the form
+    setState(initialState);
   };
 
   return (
@@ -186,7 +242,6 @@ export default function Form() {
               type={type}
               id={id}
               label={label}
-              listName={listName}
               reference={fileRef}
               required={required}
               errorMsg={errorMsg}
@@ -201,6 +256,7 @@ export default function Form() {
               listName={listName}
               val={value}
               onSetValue={handleChange}
+              onBlurOut={handleBlur}
               required={required}
               minLength={minLength}
               errorMsg={errorMsg}

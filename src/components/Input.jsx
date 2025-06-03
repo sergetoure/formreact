@@ -8,6 +8,7 @@ export default function Input({
   listName,
   val,
   onSetValue,
+  onBlurOut,
   reference,
   required,
   minLength,
@@ -29,7 +30,8 @@ export default function Input({
         list={listName}
         value={val}
         onChange={onSetValue}
-        ref={type === "file" ? reference : null}
+        onBlur={onBlurOut}
+        ref={reference}
         required={required}
         minLength={minLength}
       />
