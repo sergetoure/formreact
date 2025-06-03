@@ -11,7 +11,7 @@ export default function Input({
   onBlurOut,
   reference,
   required,
-  minLength,
+  pattern,
   errorMsg,
 }) {
   return (
@@ -33,7 +33,7 @@ export default function Input({
         onBlur={onBlurOut}
         ref={reference}
         required={required}
-        minLength={minLength}
+        pattern={pattern}
       />
       <p className="error">{errorMsg}</p>
       {listName === "rolesList" && <RoleList />}
