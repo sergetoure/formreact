@@ -55,7 +55,7 @@ const initialState = {
       type: "text",
       listName: "rolesList",
       value: "",
-      required: false,
+      required: true,
       errorMsg: "",
       isValid: true,
     },
