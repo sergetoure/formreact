@@ -57,7 +57,7 @@ const initialState = {
       value: "",
       required: true,
       errorMsg: "",
-      isValid: true,
+      isValid: false,
     },
     {
       id: "files",
