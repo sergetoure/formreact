@@ -175,7 +175,13 @@ export default function Form() {
       ...prevState,
       isValid: isValid ? true : false,
     }));
-    return true;
+    // ensure that after the last input is validated, the form's isValid state is updated
+    if (id === "roles") {
+      setState((prevState) => ({
+        ...prevState,
+        isValid: prevState.inputState.every((input) => input.isValid),
+      }));
+    }
   };
   const handleChange = (e) => {
     //update state with the new value
