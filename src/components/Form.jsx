@@ -54,10 +54,10 @@ const initialState = {
       label: "Role",
       type: "text",
       listName: "rolesList",
-      value: "",
+      value: "user",
       required: true,
       errorMsg: "",
-      isValid: false,
+      isValid: true,
     },
     {
       id: "files",
@@ -82,7 +82,10 @@ export default function Form() {
   };
 
   const handleBlur = (e) => {
+   
     const id = e.target.id;
+
+    //console.log(id)
     //The first name cannot be empty.
     // The email must be a valid email address and can't be empty. A function called validateEmail has already been provided for you to check if the email is valid. It returns true if the email is valid, otherwise  false is returned.
     // The password must be at least 8 characters long.
@@ -90,6 +93,7 @@ export default function Form() {
     //set the isValid property to true if all the above conditions are met, otherwise set it to false.
 
     const inputToValidate = state.inputState.find((input) => input.id === id);
+   
     if (!inputToValidate) return false;
 
     if (inputToValidate.required && !inputToValidate.value) {
@@ -101,7 +105,7 @@ export default function Form() {
             : i
         ),
       }));
-      return false;
+      //return false;
     }
 
     if (
@@ -117,7 +121,7 @@ export default function Form() {
             : i
         ),
       }));
-      return false;
+     // return false;
     }
 
     if (
@@ -137,7 +141,7 @@ export default function Form() {
             : i
         ),
       }));
-      return false;
+     // return false;
     }
 
     // Password confirmation validation
@@ -154,7 +158,7 @@ export default function Form() {
               : i
           ),
         }));
-        return false;
+       // return false;
       }
     }
 
@@ -165,8 +169,9 @@ export default function Form() {
         i.id === inputToValidate.id ? { ...i, errorMsg: "", isValid: true } : i
       ),
     }));
-    console.log(state);
-
+    console.log(id)
+    console.log(inputToValidate.isValid);
+    //console.log(inputToValidate.isValid)
     // Check if the entire form is valid
     const isValid = state.inputState.every((item) =>
       item.required ? item.isValid : true
@@ -176,12 +181,14 @@ export default function Form() {
       isValid: isValid ? true : false,
     }));
     // ensure that after the last input is validated, the form's isValid state is updated
-    if (id === "roles") {
-      setState((prevState) => ({
-        ...prevState,
-        isValid: prevState.inputState.every((input) => input.isValid),
-      }));
-    }
+    // if (id === "roles") {
+    //   setState((prevState) => ({
+    //     ...prevState,
+    //     isValid: prevState.inputState.every((input) => input.isValid),
+    //   }));
+    // }
+   console.log(state.isValid)
+ 
   };
   const handleChange = (e) => {
     //update state with the new value
@@ -262,7 +269,7 @@ export default function Form() {
               listName={listName}
               val={value}
               onSetValue={handleChange}
-              onBlurOut={handleBlur}
+              onInput={handleBlur}
               required={required}
               minLength={minLength}
               errorMsg={errorMsg}
