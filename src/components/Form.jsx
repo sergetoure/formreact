@@ -7,6 +7,8 @@ const initialState = {
       id: "firstname",
       label: "First name",
       type: "text",
+      
+      placeholder:"Enter your first name...",
       value: "",
       required: true,
       errorMsg: "",
@@ -15,6 +17,7 @@ const initialState = {
     {
       id: "lastname",
       label: "Last name",
+      placeholder:"Enter your last name...",
       type: "text",
       value: "",
       required: true,
@@ -25,6 +28,7 @@ const initialState = {
       id: "email",
       label: "Email address",
       type: "email",
+      placeholder:"Enter your email...",
       value: "",
       required: true,
       errorMsg: "",
@@ -33,6 +37,7 @@ const initialState = {
     {
       id: "password",
       label: "Password",
+      placeholder:"Enter your password...",
       type: "password",
       value: "",
       required: true,
@@ -43,6 +48,7 @@ const initialState = {
     {
       id: "passwordconfirm",
       label: "Confirm password",
+      placeholder:"Confirm your password...",
       type: "password",
       value: "",
       required: true,
@@ -52,6 +58,7 @@ const initialState = {
     {
       id: "roles",
       label: "Role",
+      placeholder:"Select your role...",
       type: "text",
       listName: "rolesList",
       value: "",
@@ -74,123 +81,6 @@ export default function Form() {
   const [state, setState] = useState(initialState);
   const fileRef = useRef(null);
 
-  //validatEmail function to check if the email is valid
-  const validateEmail = (email) => {
-    // A simple regex for validating email addresses
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(String(email).toLowerCase());
-  };
-
-  // const handleBlur = (e) => {
-   
-  //   const id = e.target.id;
-
-  //   //console.log(id)
-  //   //The first name cannot be empty.
-  //   // The email must be a valid email address and can't be empty. A function called validateEmail has already been provided for you to check if the email is valid. It returns true if the email is valid, otherwise  false is returned.
-  //   // The password must be at least 8 characters long.
-  //   // The role must be either individual or business.
-  //   //set the isValid property to true if all the above conditions are met, otherwise set it to false.
-
-  //   const inputToValidate = state.inputState.find((input) => input.id === id);
-   
-  //   if (!inputToValidate) return false;
-
-  //   if (inputToValidate.required && !inputToValidate.value) {
-  //     setState((prevState) => ({
-  //       ...prevState,
-  //       inputState: prevState.inputState.map((i) =>
-  //         i.id === inputToValidate.id
-  //           ? { ...i, errorMsg: `${i.label} is required`, isValid: false }
-  //           : i
-  //       ),
-  //     }));
-  //     //return false;
-  //   }
-
-  //   if (
-  //     inputToValidate.type === "email" &&
-  //     inputToValidate.value &&
-  //     !validateEmail(inputToValidate.value)
-  //   ) {
-  //     setState((prevState) => ({
-  //       ...prevState,
-  //       inputState: prevState.inputState.map((i) =>
-  //         i.id === inputToValidate.id
-  //           ? { ...i, errorMsg: "Invalid email address", isValid: false }
-  //           : i
-  //       ),
-  //     }));
-  //    // return false;
-  //   }
-
-  //   if (
-  //     inputToValidate.type === "password" &&
-  //     inputToValidate.minLength &&
-  //     inputToValidate.value.length < inputToValidate.minLength
-  //   ) {
-  //     setState((prevState) => ({
-  //       ...prevState,
-  //       inputState: prevState.inputState.map((i) =>
-  //         i.id === inputToValidate.id
-  //           ? {
-  //               ...i,
-  //               errorMsg: `${i.label} must be at least ${i.minLength} characters long`,
-  //               isValid: false,
-  //             }
-  //           : i
-  //       ),
-  //     }));
-  //    // return false;
-  //   }
-
-  //   // Password confirmation validation
-  //   if (inputToValidate.id === "passwordconfirm") {
-  //     const passwordInput = state.inputState.find(
-  //       (input) => input.id === "password"
-  //     );
-  //     if (passwordInput && inputToValidate.value !== passwordInput.value) {
-  //       setState((prevState) => ({
-  //         ...prevState,
-  //         inputState: prevState.inputState.map((i) =>
-  //           i.id === inputToValidate.id
-  //             ? { ...i, errorMsg: "Passwords do not match", isValid: false }
-  //             : i
-  //         ),
-  //       }));
-  //      // return false;
-  //     }
-  //   }
-
-  //   // If all validations pass, clear error and set isValid
-  //   setState((prevState) => ({
-  //     ...prevState,
-  //     inputState: prevState.inputState.map((i) =>
-  //       i.id === inputToValidate.id ? { ...i, errorMsg: "", isValid: true } : i
-  //     ),
-  //   }));
-  //   console.log(id)
-  //   console.log(inputToValidate.isValid);
-  //   console.log(inputToValidate.value)
-  //   //console.log(inputToValidate.isValid)
-  //   // Check if the entire form is valid
-  //   const isValid = state.inputState.every((item) =>
-  //     item.required ? item.isValid : true
-  //   );
-  //   setState((prevState) => ({
-  //     ...prevState,
-  //     isValid: isValid ? true : false,
-  //   }));
-  //   // ensure that after the last input is validated, the form's isValid state is updated
-  //   // if (id === "roles") {
-  //   //   setState((prevState) => ({
-  //   //     ...prevState,
-  //   //     isValid: prevState.inputState.every((input) => input.isValid),
-  //   //   }));
-  //   // }
-  //  console.log(state.isValid)
- 
-  // };
   const handleChange = (e) => {
     const currentValue = e.target.value;
     const validityState = e.target.validity;
@@ -215,56 +105,8 @@ export default function Form() {
     }));
 
 console.log(state.isValid)
-    
-//     else {
-//   // Password confirmation validation
-//   const passwordInput = state.inputState.find(
-//     (input) => input.id === "password"
-//   );
 
-//   if (!passwordInput) {
-//     console.error("Password input not found");
-//     return;
-//   }
-
-//   if (currentValue !== passwordInput.value) {
-    
-//     setState((prevState) => ({
-//       ...prevState,
-//       inputState: prevState.inputState.map((i) =>
-//         i.id === e.target.id
-//           ? {
-//               ...i,
-//               value: currentValue,
-//               errorMsg: "Passwords do not match",
-//               isValid: false,
-//             }
-//           : i
-//       ),
-//       isValid: prevState.inputState.every((item) => item.isValid)
-      
-//     }));
-//   } else {
-//     setState((prevState) => ({
-//       ...prevState,
-//       inputState: prevState.inputState.map((i) =>
-//         i.id === e.target.id
-//           ? { ...i,
-//             value: currentValue, 
-//             errorMsg: "", 
-//             isValid: true }
-//           : i
-//       ),
-      
-//         isValid: prevState.inputState.every((item) => item.isValid)
-      
-//     }));
-//   }
-
-
-// }
   }
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -286,7 +128,6 @@ console.log(state.isValid)
     // Reset the form
     setState(initialState);
   };
-
   return (
     <>
       <form className="form" onSubmit={handleSubmit}>
@@ -301,6 +142,7 @@ console.log(state.isValid)
             required,
             minLength,
             errorMsg,
+            placeholder
           } = item;
           return type === "file" ? (
             <Input
@@ -312,6 +154,7 @@ console.log(state.isValid)
               reference={fileRef}
               required={required}
               errorMsg={errorMsg}
+              
             />
           ) : (
             <Input
@@ -327,6 +170,7 @@ console.log(state.isValid)
               required={required}
               minLength={minLength}
               errorMsg={errorMsg}
+              placeholder={placeholder}
             />
           );
         })}

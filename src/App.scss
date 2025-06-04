@@ -74,3 +74,11 @@
 .error {
   color: tomato;
 }
+
+input::placeholder{
+  font-size: 10px;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  opacity: 0.9;
+  font-weight: 500;
+  
+}

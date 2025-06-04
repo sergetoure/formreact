@@ -8,7 +8,7 @@ export default function Input({
   listName,
   val,
   onSetValue,
-  //onInput,
+  placeholder,
   reference,
   required,
   minLength,
@@ -33,7 +33,7 @@ export default function Input({
         //onInput={onInput}
         ref={reference}
         required={required}
-        minLength={minLength}
+        placeholder={placeholder}
       />
       <p className="error">{errorMsg}</p>
       {listName === "rolesList" && <RoleList />}
