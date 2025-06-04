@@ -7,8 +7,8 @@ const initialState = {
       id: "firstname",
       label: "First name",
       type: "text",
-      
-      placeholder:"Enter your first name...",
+
+      placeholder: "Enter your first name...",
       value: "",
       required: true,
       errorMsg: "",
@@ -17,7 +17,7 @@ const initialState = {
     {
       id: "lastname",
       label: "Last name",
-      placeholder:"Enter your last name...",
+      placeholder: "Enter your last name...",
       type: "text",
       value: "",
       required: true,
@@ -28,7 +28,7 @@ const initialState = {
       id: "email",
       label: "Email address",
       type: "email",
-      placeholder:"Enter your email...",
+      placeholder: "Enter your email...",
       value: "",
       required: true,
       errorMsg: "",
@@ -37,7 +37,7 @@ const initialState = {
     {
       id: "password",
       label: "Password",
-      placeholder:"Enter your password...",
+      placeholder: "Enter your password...",
       type: "password",
       value: "",
       required: true,
@@ -48,7 +48,7 @@ const initialState = {
     {
       id: "passwordconfirm",
       label: "Confirm password",
-      placeholder:"Confirm your password...",
+      placeholder: "Confirm your password...",
       type: "password",
       value: "",
       required: true,
@@ -58,7 +58,7 @@ const initialState = {
     {
       id: "roles",
       label: "Role",
-      placeholder:"Select your role...",
+      placeholder: "Select your role...",
       type: "text",
       listName: "rolesList",
       value: "",
@@ -84,10 +84,8 @@ export default function Form() {
   const handleChange = (e) => {
     const currentValue = e.target.value;
     const validityState = e.target.validity;
-   
-    
-  
-       setState((prevState) => ({
+
+    setState((prevState) => ({
       ...prevState,
       inputState: prevState.inputState.map((item) =>
         item.id === e.target.id && e.target.type !== "file"
@@ -95,18 +93,21 @@ export default function Form() {
               ...item,
               value: currentValue,
               isValid: currentValue !== "" && validityState.valid,
-              errorMsg: validityState.valid ? "" : e.target.validationMessage
+              errorMsg: validityState.valid ? "" : e.target.validationMessage,
             }
           : item
       ),
-      isValid: prevState.inputState.every((item) => 
-        item.required ? (item.id === e.target.id ? (currentValue !== "" && validityState.valid) : item.isValid) : true
-      )
+      isValid: prevState.inputState.every((item) =>
+        item.required
+          ? item.id === e.target.id
+            ? currentValue !== "" && validityState.valid
+            : item.isValid
+          : true
+      ),
     }));
 
-console.log(state.isValid)
-
-  }
+    console.log(state.isValid);
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -122,11 +123,21 @@ console.log(state.isValid)
       });
     }
 
-    // Log the current state
-    console.log("Form submitted with state:");
-    console.log(state);
-    // Reset the form
-    setState(initialState);
+    //verify password confirmation
+    const password = state.inputState.find((item) => item.id === "password");
+    const confirmPassword = state.inputState.find(
+      (item) => item.id === "passwordconfirm"
+    );
+
+    if (password.value && password.value !== confirmPassword.value) {
+      console.log("verify password confirmation");
+    } else {
+      // Log the current state
+      console.log("Form submitted with state:");
+      console.log(state);
+      // Reset the form
+      setState(initialState);
+    }
   };
   return (
     <>
@@ -142,7 +153,7 @@ console.log(state.isValid)
             required,
             minLength,
             errorMsg,
-            placeholder
+            placeholder,
           } = item;
           return type === "file" ? (
             <Input
@@ -154,7 +165,6 @@ console.log(state.isValid)
               reference={fileRef}
               required={required}
               errorMsg={errorMsg}
-              
             />
           ) : (
             <Input
