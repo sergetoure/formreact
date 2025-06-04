@@ -8,7 +8,7 @@ export default function Input({
   listName,
   val,
   onSetValue,
-  onInput,
+  //onInput,
   reference,
   required,
   minLength,
@@ -30,7 +30,7 @@ export default function Input({
         list={listName}
         value={val}
         onChange={onSetValue}
-        onInput={onInput}
+        //onInput={onInput}
         ref={reference}
         required={required}
         minLength={minLength}

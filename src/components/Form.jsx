@@ -54,10 +54,10 @@ const initialState = {
       label: "Role",
       type: "text",
       listName: "rolesList",
-      value: "user",
+      value: "",
       required: true,
       errorMsg: "",
-      isValid: true,
+      isValid: false,
     },
     {
       id: "files",
@@ -81,136 +81,190 @@ export default function Form() {
     return re.test(String(email).toLowerCase());
   };
 
-  const handleBlur = (e) => {
+  // const handleBlur = (e) => {
    
-    const id = e.target.id;
+  //   const id = e.target.id;
 
-    //console.log(id)
-    //The first name cannot be empty.
-    // The email must be a valid email address and can't be empty. A function called validateEmail has already been provided for you to check if the email is valid. It returns true if the email is valid, otherwise  false is returned.
-    // The password must be at least 8 characters long.
-    // The role must be either individual or business.
-    //set the isValid property to true if all the above conditions are met, otherwise set it to false.
+  //   //console.log(id)
+  //   //The first name cannot be empty.
+  //   // The email must be a valid email address and can't be empty. A function called validateEmail has already been provided for you to check if the email is valid. It returns true if the email is valid, otherwise  false is returned.
+  //   // The password must be at least 8 characters long.
+  //   // The role must be either individual or business.
+  //   //set the isValid property to true if all the above conditions are met, otherwise set it to false.
 
-    const inputToValidate = state.inputState.find((input) => input.id === id);
+  //   const inputToValidate = state.inputState.find((input) => input.id === id);
    
-    if (!inputToValidate) return false;
+  //   if (!inputToValidate) return false;
 
-    if (inputToValidate.required && !inputToValidate.value) {
-      setState((prevState) => ({
-        ...prevState,
-        inputState: prevState.inputState.map((i) =>
-          i.id === inputToValidate.id
-            ? { ...i, errorMsg: `${i.label} is required`, isValid: false }
-            : i
-        ),
-      }));
-      //return false;
-    }
+  //   if (inputToValidate.required && !inputToValidate.value) {
+  //     setState((prevState) => ({
+  //       ...prevState,
+  //       inputState: prevState.inputState.map((i) =>
+  //         i.id === inputToValidate.id
+  //           ? { ...i, errorMsg: `${i.label} is required`, isValid: false }
+  //           : i
+  //       ),
+  //     }));
+  //     //return false;
+  //   }
 
-    if (
-      inputToValidate.type === "email" &&
-      inputToValidate.value &&
-      !validateEmail(inputToValidate.value)
-    ) {
-      setState((prevState) => ({
-        ...prevState,
-        inputState: prevState.inputState.map((i) =>
-          i.id === inputToValidate.id
-            ? { ...i, errorMsg: "Invalid email address", isValid: false }
-            : i
-        ),
-      }));
-     // return false;
-    }
+  //   if (
+  //     inputToValidate.type === "email" &&
+  //     inputToValidate.value &&
+  //     !validateEmail(inputToValidate.value)
+  //   ) {
+  //     setState((prevState) => ({
+  //       ...prevState,
+  //       inputState: prevState.inputState.map((i) =>
+  //         i.id === inputToValidate.id
+  //           ? { ...i, errorMsg: "Invalid email address", isValid: false }
+  //           : i
+  //       ),
+  //     }));
+  //    // return false;
+  //   }
 
-    if (
-      inputToValidate.type === "password" &&
-      inputToValidate.minLength &&
-      inputToValidate.value.length < inputToValidate.minLength
-    ) {
-      setState((prevState) => ({
-        ...prevState,
-        inputState: prevState.inputState.map((i) =>
-          i.id === inputToValidate.id
-            ? {
-                ...i,
-                errorMsg: `${i.label} must be at least ${i.minLength} characters long`,
-                isValid: false,
-              }
-            : i
-        ),
-      }));
-     // return false;
-    }
+  //   if (
+  //     inputToValidate.type === "password" &&
+  //     inputToValidate.minLength &&
+  //     inputToValidate.value.length < inputToValidate.minLength
+  //   ) {
+  //     setState((prevState) => ({
+  //       ...prevState,
+  //       inputState: prevState.inputState.map((i) =>
+  //         i.id === inputToValidate.id
+  //           ? {
+  //               ...i,
+  //               errorMsg: `${i.label} must be at least ${i.minLength} characters long`,
+  //               isValid: false,
+  //             }
+  //           : i
+  //       ),
+  //     }));
+  //    // return false;
+  //   }
 
-    // Password confirmation validation
-    if (inputToValidate.id === "passwordconfirm") {
-      const passwordInput = state.inputState.find(
-        (input) => input.id === "password"
-      );
-      if (passwordInput && inputToValidate.value !== passwordInput.value) {
-        setState((prevState) => ({
-          ...prevState,
-          inputState: prevState.inputState.map((i) =>
-            i.id === inputToValidate.id
-              ? { ...i, errorMsg: "Passwords do not match", isValid: false }
-              : i
-          ),
-        }));
-       // return false;
-      }
-    }
+  //   // Password confirmation validation
+  //   if (inputToValidate.id === "passwordconfirm") {
+  //     const passwordInput = state.inputState.find(
+  //       (input) => input.id === "password"
+  //     );
+  //     if (passwordInput && inputToValidate.value !== passwordInput.value) {
+  //       setState((prevState) => ({
+  //         ...prevState,
+  //         inputState: prevState.inputState.map((i) =>
+  //           i.id === inputToValidate.id
+  //             ? { ...i, errorMsg: "Passwords do not match", isValid: false }
+  //             : i
+  //         ),
+  //       }));
+  //      // return false;
+  //     }
+  //   }
 
-    // If all validations pass, clear error and set isValid
-    setState((prevState) => ({
-      ...prevState,
-      inputState: prevState.inputState.map((i) =>
-        i.id === inputToValidate.id ? { ...i, errorMsg: "", isValid: true } : i
-      ),
-    }));
-    console.log(id)
-    console.log(inputToValidate.isValid);
-    //console.log(inputToValidate.isValid)
-    // Check if the entire form is valid
-    const isValid = state.inputState.every((item) =>
-      item.required ? item.isValid : true
-    );
-    setState((prevState) => ({
-      ...prevState,
-      isValid: isValid ? true : false,
-    }));
-    // ensure that after the last input is validated, the form's isValid state is updated
-    // if (id === "roles") {
-    //   setState((prevState) => ({
-    //     ...prevState,
-    //     isValid: prevState.inputState.every((input) => input.isValid),
-    //   }));
-    // }
-   console.log(state.isValid)
+  //   // If all validations pass, clear error and set isValid
+  //   setState((prevState) => ({
+  //     ...prevState,
+  //     inputState: prevState.inputState.map((i) =>
+  //       i.id === inputToValidate.id ? { ...i, errorMsg: "", isValid: true } : i
+  //     ),
+  //   }));
+  //   console.log(id)
+  //   console.log(inputToValidate.isValid);
+  //   console.log(inputToValidate.value)
+  //   //console.log(inputToValidate.isValid)
+  //   // Check if the entire form is valid
+  //   const isValid = state.inputState.every((item) =>
+  //     item.required ? item.isValid : true
+  //   );
+  //   setState((prevState) => ({
+  //     ...prevState,
+  //     isValid: isValid ? true : false,
+  //   }));
+  //   // ensure that after the last input is validated, the form's isValid state is updated
+  //   // if (id === "roles") {
+  //   //   setState((prevState) => ({
+  //   //     ...prevState,
+  //   //     isValid: prevState.inputState.every((input) => input.isValid),
+  //   //   }));
+  //   // }
+  //  console.log(state.isValid)
  
-  };
+  // };
   const handleChange = (e) => {
-    //update state with the new value
-    setState((prevState) => ({
+    const currentValue = e.target.value;
+    const validityState = e.target.validity;
+   
+    
+  
+       setState((prevState) => ({
       ...prevState,
       inputState: prevState.inputState.map((item) =>
         item.id === e.target.id && e.target.type !== "file"
-          ? { ...item, value: e.target.value }
+          ? {
+              ...item,
+              value: currentValue,
+              isValid: currentValue !== "" && validityState.valid,
+              errorMsg: validityState.valid ? "" : e.target.validationMessage
+            }
           : item
       ),
+      isValid: prevState.inputState.every((item) => 
+        item.required ? (item.id === e.target.id ? (currentValue !== "" && validityState.valid) : item.isValid) : true
+      )
     }));
 
-    // Call getIsFormValid to check if the form is valid
-    //the getIsFormValid function should be called after the state is updated
-    // This ensures that the validation reflects the latest input values
-    //the getisformvalid must be checked when after the input has been changed
-    // and the state has been updated
-    // This is to ensure that the validation reflects the latest input values
+console.log(state.isValid)
+    
+//     else {
+//   // Password confirmation validation
+//   const passwordInput = state.inputState.find(
+//     (input) => input.id === "password"
+//   );
 
-    //console.log(state);
-    //handleBlur(e);
-  };
+//   if (!passwordInput) {
+//     console.error("Password input not found");
+//     return;
+//   }
+
+//   if (currentValue !== passwordInput.value) {
+    
+//     setState((prevState) => ({
+//       ...prevState,
+//       inputState: prevState.inputState.map((i) =>
+//         i.id === e.target.id
+//           ? {
+//               ...i,
+//               value: currentValue,
+//               errorMsg: "Passwords do not match",
+//               isValid: false,
+//             }
+//           : i
+//       ),
+//       isValid: prevState.inputState.every((item) => item.isValid)
+      
+//     }));
+//   } else {
+//     setState((prevState) => ({
+//       ...prevState,
+//       inputState: prevState.inputState.map((i) =>
+//         i.id === e.target.id
+//           ? { ...i,
+//             value: currentValue, 
+//             errorMsg: "", 
+//             isValid: true }
+//           : i
+//       ),
+      
+//         isValid: prevState.inputState.every((item) => item.isValid)
+      
+//     }));
+//   }
+
+
+// }
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -269,7 +323,7 @@ export default function Form() {
               listName={listName}
               val={value}
               onSetValue={handleChange}
-              onInput={handleBlur}
+              //onInput={handleBlur}
               required={required}
               minLength={minLength}
               errorMsg={errorMsg}
